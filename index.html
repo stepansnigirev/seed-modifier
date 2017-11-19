@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Electrum seed modifier</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="apple-touch-icon" sizes="120x120" href="favicons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+	<link rel="manifest" href="favicons/manifest.json">
+	<link rel="mask-icon" href="favicons/safari-pinned-tab.svg" color="#5bbad5">
+	<link rel="shortcut icon" href="favicons/favicon.ico">
+	<meta name="msapplication-config" content="favicons/browserconfig.xml">
+	<meta name="theme-color" content="#ffffff">
+
+ 	<link rel="stylesheet" href="libs/bootstrap.min.css">
+	<style type="text/css">
+		.container{
+			max-width: 850px;
+		}
+		.justify{
+			text-align: justify;
+		}
+		.text-muted{
+			text-align: center;
+		}
+		main{
+			text-align: center;
+		}
+		input[type="text"]{
+			font-size: 25px;
+			width: 100%;
+			text-align: center;
+		}
+		h1,h2{
+			margin-top: 50px;
+		}
+		.wrap{
+			word-wrap: break-word;
+		}
+	</style>
+</head>
+<body>
+	<main class="container">
+
+		<h1 class="display-4">Electrum seed modifier</h1>
+
+		<p class="justify">
+			This tool can slightly modify the seed you already remember from one wallet type to another. For example, to move from normal addresses to Segwit wallet.
+		</p>
+
+		<h2>Your seed:</h2>
+		<input type="text" class="form-control" id="seed">
+		</input>
+
+		<h2>Seed in hex format:</h2>
+		<p class="text-muted small">
+			In electrum seed contains both a checksum and wallet type. Seed should start with 01 for standart wallets, 100 for segwit, 101 for 2FA.
+		</p>
+		<div id="hmac" class="wrap">&nbsp;
+		</div>
+
+		<br><br>
+		<p>
+			<input type="button" id="generate" class="btn btn-primary" value="Generate">
+		</p>
+
+		<h2>Your segwit seed:</h2>
+		<input type="text" class="form-control" id="seed2">
+		</input>
+
+		<h2>Seed in hex format:</h2>
+		<p class="text-muted small">
+			In electrum seed contains both a checksum and wallet type. Seed should start with 01 for standart wallets, 100 for segwit, 101 for 2FA.
+		</p>
+		<div id="hmac2" class="wrap">&nbsp;
+		</div>
+
+<!-- 		<h2>Your master private key:</h2>
+		<p class="text-muted small">You can import it to any wallet you want.</p>
+		<div id="xprv2" class="wrap">&nbsp;
+		</div>
+
+		<h2>Your master public key:</h2>
+		<p class="text-muted small">You can import it to any wallet to watch your funds.</p>
+		<div id="xpub2" class="wrap">&nbsp;
+		</div>
+ -->
+		<br>
+		<h2>Support me</h2>
+		<p>
+			Bitcoin address: <a href="bitcoin:12mYigDvRSxsBsGBrN6Xd8FPrwdi7zk8CW">12mYigDvRSxsBsGBrN6Xd8FPrwdi7zk8CW</a><br>
+			Bitcoin segwit address: <a href="bitcoin:bc1qqtp8kypp6u3zshjncyzrl98k9qjju2ua5gsqk6">bc1qqtp8kypp6u3zshjncyzrl98k9qjju2ua5gsqk6</a>
+		</p>
+	</main>
+
+	<script src="libs/jquery-3.2.1.min.js"></script>
+	<script src="wordlist/english.js"></script>
+	<script src="convert.js"></script>
+</body>
+</html>
