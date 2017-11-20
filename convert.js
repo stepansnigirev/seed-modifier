@@ -1,5 +1,71 @@
-$(document).ready( () => {
+document.addEventListener("DOMContentLoaded", (e) => { 
 
+	function bip39verify(seed){
+		return new Promise( (resolve, reject) => {
+			var words = seed.trim().split(" ").map( word => {
+				return english.indexOf(word);
+			});
+			if(words.includes(-1)){
+				reject("Invalid BIP-39 seed, unknown words");
+				return false;
+			}
+			if(words.length % 3 != 0){
+				reject("Invalid length of the seed");
+				return false;
+			}
+			var csLen = words.length/3; // checksum length in bits
+			var payloadLen = words.length*11 - csLen;
+
+			var arr = new Uint8Array(payloadLen/8);
+			for(let i = 0; i < arr.length; i++){
+				let startWord = Math.floor(i*8/11);
+				let startPos = i*8 % 11;
+				let endWord = Math.floor((i+1)*8/11);
+				let endPos = (i+1)*8 % 11;
+				arr[i] = (words[startWord] << (startPos-3)) | (words[endWord] >> (11-endPos));
+			}
+
+			var ccs = words[words.length-1] & (2**csLen-1);
+			window.crypto.subtle.digest({name: "SHA-256"}, arr).then(function (hash) {
+				var h = new Uint8Array(hash);
+				var cs = h[0] >> (8 - csLen);
+				if(cs == ccs){
+					resolve(true);
+				}else{
+					reject("Checksum is wrong");
+				}
+			});
+		});
+	}
+
+	function bip39fix(seed){
+		// fixes the seed
+	}
+
+	function checkElectrumSeed(prefix){
+		return function(seed){
+			console.log(seed, prefix);
+		};
+	}
+	var formats = [
+		{
+			name: "BIP-39",
+			verify: bip39verify,
+			fix: bip39fix // for bip39 we can make seed compatible in one run
+		},
+		{
+			name: "Electrum standart",
+			verify: checkElectrumSeed("01")
+		},
+		{
+			name: "Electrum segwit",
+			verify: checkElectrumSeed("100")
+		},
+		{
+			name: "Electrum 2FA",
+			verify: checkElectrumSeed("101")
+		}
+	]
 	var prefix = "01";
 	var segwitPrefix = "100";
 
@@ -12,6 +78,13 @@ $(document).ready( () => {
 		"raw", enc.encode("Seed version"), { name: "HMAC", hash: {name: "SHA-512"} }, false, ["sign", "verify"]
 	).then( k => {
 		key = k;
+		checkSeed();
+		var seed = document.getElementById("seed").value;
+		bip39verify(seed).then( e => {
+			console.log("BIP-39 compatible seed");
+		}, err => {
+			console.log(err);
+		});
 	});
 
 	function getHash(str){
@@ -36,8 +109,8 @@ $(document).ready( () => {
 			var success = false;
 			values.forEach( (e, i) => {
 			    if(e.hash.startsWith(segwitPrefix)){
-			    	$("#seed2").val(e.str);
-					$("#hmac2").html(e.hash);
+			    	document.getElementById("seed2").value = e.str;
+					document.getElementById("hmac2").innerHTML = e.hash;
 					success = true;
 				}
 			});
@@ -53,22 +126,30 @@ $(document).ready( () => {
 		});
 	}
 
-	$("input").on("input", e => {
-		var seed = $("#seed").val();
+	function checkSeed(){
+		var seed = document.getElementById("seed").value;
 		getHash(seed).then( o => { 
-			$("#hmac").html(o.hash);
+			document.getElementById("hmac").innerHTML = o.hash;
 
 			if(o.hash.startsWith(prefix)){
-				$("#seed").addClass("is-valid");
-				$("#seed").removeClass("is-invalid");
+				document.getElementById("seed").className = "form-control is-valid";
 			}else{
-				$("#seed").addClass("is-invalid");
-				$("#seed").removeClass("is-valid");
+				document.getElementById("seed").className = "form-control is-invalid";
 			}
 		});
+	}
+
+    document.getElementById("seed").addEventListener('input', e => {
+		var seed = document.getElementById("seed").value;
+		checkSeed();
+		bip39verify(seed).then( e => {
+			console.log("BIP-39 compatible seed");
+		}, err => {
+			console.log(err);
+		});
 	});
-	$("#generate").on("click", e => {
-		var seed = $("#seed").val();
+	document.getElementById("generate").addEventListener("click", e => {
+		var seed = document.getElementById("seed").value;
 		tryWord(0, seed);
 	});
 });

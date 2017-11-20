@@ -14,32 +14,7 @@
 	<meta name="msapplication-config" content="favicons/browserconfig.xml">
 	<meta name="theme-color" content="#ffffff">
 
- 	<link rel="stylesheet" href="libs/bootstrap.min.css">
-	<style type="text/css">
-		.container{
-			max-width: 850px;
-		}
-		.justify{
-			text-align: justify;
-		}
-		.text-muted{
-			text-align: center;
-		}
-		main{
-			text-align: center;
-		}
-		input[type="text"]{
-			font-size: 25px;
-			width: 100%;
-			text-align: center;
-		}
-		h1,h2{
-			margin-top: 50px;
-		}
-		.wrap{
-			word-wrap: break-word;
-		}
-	</style>
+ 	<link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
 	<main class="container">
@@ -51,11 +26,10 @@
 		</p>
 
 		<h2>Your seed:</h2>
-		<input type="text" class="form-control" id="seed">
-		</input>
+		<input type="text" class="form-control" id="seed" value="kit venture inmate circle ski prevent burst zoo upon rather angle ancient">
 
 		<h2>Seed in hex format:</h2>
-		<p class="text-muted small">
+		<p class="note">
 			In electrum seed contains both a checksum and wallet type. Seed should start with 01 for standart wallets, 100 for segwit, 101 for 2FA.
 		</p>
 		<div id="hmac" class="wrap">&nbsp;
@@ -63,7 +37,7 @@
 
 		<br><br>
 		<p>
-			<input type="button" id="generate" class="btn btn-primary" value="Generate">
+			<input type="button" id="generate" class="btn" value="Generate">
 		</p>
 
 		<h2>Your segwit seed:</h2>
@@ -71,22 +45,12 @@
 		</input>
 
 		<h2>Seed in hex format:</h2>
-		<p class="text-muted small">
+		<p class="note">
 			In electrum seed contains both a checksum and wallet type. Seed should start with 01 for standart wallets, 100 for segwit, 101 for 2FA.
 		</p>
 		<div id="hmac2" class="wrap">&nbsp;
 		</div>
 
-<!-- 		<h2>Your master private key:</h2>
-		<p class="text-muted small">You can import it to any wallet you want.</p>
-		<div id="xprv2" class="wrap">&nbsp;
-		</div>
-
-		<h2>Your master public key:</h2>
-		<p class="text-muted small">You can import it to any wallet to watch your funds.</p>
-		<div id="xpub2" class="wrap">&nbsp;
-		</div>
- -->
 		<br>
 		<h2>Support me</h2>
 		<p>
@@ -95,7 +59,6 @@
 		</p>
 	</main>
 
-	<script src="libs/jquery-3.2.1.min.js"></script>
 	<script src="wordlist/english.js"></script>
 	<script src="convert.js"></script>
 </body>

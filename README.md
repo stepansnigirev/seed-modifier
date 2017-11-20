@@ -18,7 +18,13 @@ kit venture inmate circle ski prevent burst zoo upon rather angle scale
 
 # Todo:
 
-- detect language
-- detect type of seed
+- BIP39
+  - replace words
+  - extend length if necessary
+- make generation
+  - html layout
+  - detect type of seed
+  - highlight changes
 - detect typos (words not from the list)
 - all types of seeds (01, 100, 101, bip39, check trezor etc)
+- detect language
