@@ -17,16 +17,19 @@
  	<link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-	<main class="container">
+	<a href="https://github.com/stepansnigirev/seed-modifier"><img src="fork_me.png" id="forkme"></a>
 
-		<h1 class="display-4">Electrum seed modifier</h1>
+	<main>
+
+		<h1>Electrum seed modifier</h1>
 
 		<p class="justify">
-			This tool can slightly modify the seed you already remember from one wallet type to another. For example, to move from normal addresses to Segwit wallet.
+			This tool can slightly modify the seed you already remember to make it work with another type of wallet. For example, you can upgrade from standart wallet to a segwit wallet.
 		</p>
 
 		<h2>Your seed:</h2>
 		<input type="text" class="form-control" id="seed" value="kit venture inmate circle ski prevent burst zoo upon rather angle ancient">
+		<p class="note" id="seed-note">&nbsp;</p>
 
 		<h2>Seed in hex format:</h2>
 		<p class="note">
@@ -40,23 +43,17 @@
 			<input type="button" id="generate" class="btn" value="Generate">
 		</p>
 
-		<h2>Your segwit seed:</h2>
-		<input type="text" class="form-control" id="seed2">
-		</input>
+		<h2>Electrum Standart seed</h2>
+		<div class="seed" id="el-standart">&nbsp;</div>
 
-		<h2>Seed in hex format:</h2>
-		<p class="note">
-			In electrum seed contains both a checksum and wallet type. Seed should start with 01 for standart wallets, 100 for segwit, 101 for 2FA.
-		</p>
-		<div id="hmac2" class="wrap">&nbsp;
-		</div>
+		<h2>Electrum Segwit seed</h2>
+		<div class="seed" id="el-segwit">&nbsp;</div>
 
-		<br>
-		<h2>Support me</h2>
-		<p>
-			Bitcoin address: <a href="bitcoin:12mYigDvRSxsBsGBrN6Xd8FPrwdi7zk8CW">12mYigDvRSxsBsGBrN6Xd8FPrwdi7zk8CW</a><br>
-			Bitcoin segwit address: <a href="bitcoin:bc1qqtp8kypp6u3zshjncyzrl98k9qjju2ua5gsqk6">bc1qqtp8kypp6u3zshjncyzrl98k9qjju2ua5gsqk6</a>
-		</p>
+		<h2>Electrum 2FA seed</h2>
+		<div class="seed" id="el-2fa">&nbsp;</div>
+
+		<h2>BIP-39 seed</h2>
+		<div class="seed" id="bip39">&nbsp;</div>
 	</main>
 
 	<script src="wordlist/english.js"></script>

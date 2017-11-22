@@ -21,10 +21,12 @@ kit venture inmate circle ski prevent burst zoo upon rather angle scale
 - BIP39
   - replace words
   - extend length if necessary
-- make generation
-  - html layout
-  - detect type of seed
+- make seed generation
+  + html layout
+  + detect type of the seed
+  - separate view and logic
   - highlight changes
 - detect typos (words not from the list)
 - all types of seeds (01, 100, 101, bip39, check trezor etc)
 - detect language
+- python implementation
