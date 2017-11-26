@@ -9,6 +9,15 @@ html, body{
 *{
 	box-sizing: border-box;
 }
+.error{
+	color: #f00;
+}
+.modified{
+	background: #FDECD0;
+}
+.added{
+	background: #E7F7D5;
+}
 #forkme{
 	position: absolute;
 	right: 0;

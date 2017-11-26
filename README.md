@@ -18,15 +18,10 @@ kit venture inmate circle ski prevent burst zoo upon rather angle scale
 
 # Todo:
 
+- write normal readme.md file
 - BIP39
-  - replace words
-  - extend length if necessary
-- make seed generation
-  + html layout
-  + detect type of the seed
-  - separate view and logic
-  - highlight changes
-- detect typos (words not from the list)
-- all types of seeds (01, 100, 101, bip39, check trezor etc)
-- detect language
+  - extend length if number of words is wrong (based on hash)
+- refactor code to separate view and logic functions
+- add different languages support
+- test with other wallets
 - python implementation

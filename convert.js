@@ -1,5 +1,41 @@
 document.addEventListener("DOMContentLoaded", (e) => { 
 
+	// Levenstein distance between two strings
+	// used to replace non-dictionary words for BIP-39
+	levensteinDistance = function(a, b){
+	  if(a.length == 0) return b.length; 
+	  if(b.length == 0) return a.length; 
+
+	  var matrix = [];
+
+	  // increment along the first column of each row
+	  var i;
+	  for(i = 0; i <= b.length; i++){
+	    matrix[i] = [i];
+	  }
+
+	  // increment each column in the first row
+	  var j;
+	  for(j = 0; j <= a.length; j++){
+	    matrix[0][j] = j;
+	  }
+
+	  // Fill in the rest of the matrix
+	  for(i = 1; i <= b.length; i++){
+	    for(j = 1; j <= a.length; j++){
+	      if(b.charAt(i-1) == a.charAt(j-1)){
+	        matrix[i][j] = matrix[i-1][j-1];
+	      } else {
+	        matrix[i][j] = Math.min(matrix[i-1][j-1] + 1, // substitution
+	                                Math.min(matrix[i][j-1] + 1, // insertion
+	                                         matrix[i-1][j] + 1)); // deletion
+	      }
+	    }
+	  }
+
+	  return matrix[b.length][a.length];
+	};
+
 	function bip39verify(seed){
 		// checks if the seed is in BIP-39 format
 		return new Promise( (resolve, reject) => {
@@ -50,17 +86,30 @@ document.addEventListener("DOMContentLoaded", (e) => {
 		return new Promise( (resolve, reject) => {
 			// getting 11-bit values encoded in the seed words
 			var words = seed.trim().split(" ").map( word => {
-				return english.indexOf(word);
-			});
-			// checks if all words are in the dictionary
-			if(words.includes(-1)){
-				reject("Invalid BIP-39 seed, unknown words");
-				return false;
-			}
+				let ind = english.indexOf(word);
+				// replacing word with a closest one
+				if(ind == -1){
+					ind = 0;
+					let distance = Infinity;
+					for (let i = 0; i < english.length; i++) {
+						let curDistance = levensteinDistance(word, english[i]);
+						if(curDistance < distance){
+							distance = curDistance;
+							ind = i;
+						}
+					}
+				}
+				return ind;
+			});			
 			// checks if the length is correct
+			// adding extra words if not
 			if(words.length % 3 != 0){
-				reject("Invalid length of the seed");
-				return false;
+				// for now just add last word a few more times
+				// better to rewrite with hash later
+				let extraWords = 3 - words.length % 3;
+				for(let i = 0; i < extraWords; i++){
+					words.push(words[words.length-1]);
+				}
 			}
 
 			var csLen = words.length/3; // checksum length in bits
@@ -76,7 +125,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
 				arr[i] = (words[startWord] << (startPos-3)) | (words[endWord] >> (11-endPos));
 			}
 
-			// checksum check
+			// checksum
 			var ccs = words[words.length-1] & (2**csLen-1); // checksum from the seed
 			window.crypto.subtle.digest({name: "SHA-256"}, arr).then(function (hash) {
 				var h = new Uint8Array(hash);
@@ -84,11 +133,6 @@ document.addEventListener("DOMContentLoaded", (e) => {
 				words[words.length-1] = words[words.length-1] - ccs + cs;
 				var newSeed = words.map( w => { return english[w]; }).join(" ");
 				resolve(newSeed);
-				// if(cs == ccs){
-				// 	resolve(true);
-				// }else{
-				// 	reject("Checksum is wrong");
-				// }
 			});
 		});
 	}
@@ -156,6 +200,21 @@ document.addEventListener("DOMContentLoaded", (e) => {
 		});
 	}
 
+	function showSeed(element, seed, oldSeed){
+		var oldWords = oldSeed.trim().split(" ");
+		var newWords = seed.trim().split(" ");
+		newWords = newWords.map( (word, i) => {
+			if(i >= oldWords.length){
+				return "<span class='added'>"+word+"</span>";
+			}
+			if(oldWords[i] != word){
+				return "<span class='modified'>"+word+"</span>";
+			}
+			return word;
+		})
+		element.innerHTML = newWords.join(" ");
+	}
+
 	function tryWord(seed, hashFormats, j=0){
 		hashFormats = hashFormats.slice();
 		if(hashFormats.length == 0){
@@ -163,12 +222,9 @@ document.addEventListener("DOMContentLoaded", (e) => {
 		}
 
 		var words = seed.trim().split(" ");
-		var str = words.slice(0,-1-j).join(" ") + " " + "xxx" + " " + words.slice(-1-j).slice(1).join(" ");
-		str = str.trim();
-		console.log(str);
 		var promises = [];
-		for(var i = 0; i < english.length; i++){
-			str = words.slice(0,-1-j).join(" ") + " " + english[i] + " " + words.slice(-1-j).slice(1).join(" ");
+		for(let i = 0; i < english.length; i++){
+			let str = words.slice(0,-1-j).join(" ") + " " + english[i] + " " + words.slice(-1-j).slice(1).join(" ");
 			str = str.trim();
 			promises.push(getHash(str));
 		}
@@ -177,7 +233,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
 			values.forEach( (e, i) => {
 				hashFormats.forEach( (f, j) => {
 					if(("verifyHash" in f) && f.verifyHash(e.hash)){
-						f.element.innerHTML = e.str;
+						showSeed(f.element, e.str, seed);
 						hashFormats[j] = {};
 					}
 				});
@@ -187,7 +243,9 @@ document.addEventListener("DOMContentLoaded", (e) => {
 			if(j < words.length){
 				tryWord(seed, hashFormats, j+1);
 			}else{
-				console.log("FAIL");
+				// for now it can replace only one word, it's usually enough.
+				// refactor later to try two or more words
+				f.element.innerHTML = "<span class='error'>Error: unable to find matching seed</span>";
 			}
 		});
 	}
@@ -226,9 +284,9 @@ document.addEventListener("DOMContentLoaded", (e) => {
 	});
 	document.getElementById("generate").addEventListener("click", e => {
 		bip39fix(seedInput.value).then( seed => {
-			document.getElementById("bip39").innerHTML = seed;
+			showSeed(document.getElementById("bip39"), seed, seedInput.value);
 		}, err => {
-			document.getElementById("bip39").innerHTML = "Error: " + err;
+			document.getElementById("bip39").innerHTML = "<span class='error'>Error: " + err + "</span>";
 		});
 		tryWord(seedInput.value, formats.filter( f => { return ("verifyHash" in f); }));
 	});
