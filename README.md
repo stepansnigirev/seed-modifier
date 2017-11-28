@@ -1,6 +1,8 @@
 # Electrum seed modifier
 
-This tool can slightly modify the seed you already remember to make it work with another type of wallet. For example, you can upgrade from standart electrum wallet to a segwit wallet, or to switch from electrum to BIP-39 compatible wallet.
+Online version: [https://stepansnigirev.github.io/seed-modifier/](https://stepansnigirev.github.io/seed-modifier/).
+
+This tool can slightly modify the seed you already remember to make it work with another type of wallet. For example, you can upgrade from standart electrum wallet to a segwit wallet, or to switch from electrum to BIP-39 compatible wallet with only one different word in the seed.
 
 **Be careful!** You are entering your private key here! It is strongly recommended to open this page in incognito mode without any browser extensions, switch off your internet connection completely, and only after that enter your seed in the field below. Don't forget to close this site before connecting to the internet again.
 
