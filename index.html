@@ -24,21 +24,19 @@
 		<h1>Electrum seed modifier</h1>
 
 		<p class="justify">
-			This tool can slightly modify the seed you already remember to make it work with another type of wallet. For example, you can upgrade from standart wallet to a segwit wallet.
+			This tool can slightly modify the seed you already remember to make it work with another type of wallet. For example, you can upgrade from standart electrum wallet to a segwit wallet, or to switch from electrum to BIP-39 compatible wallet.
+		</p>
+		<p class="justify">
+			<b>Be careful!</b> You are entering your private key here! It is strongly recommended to open this page in incognito mode without any browser extensions, switch off your internet connection completely, and only after that enter your seed in the field below. Don't forget to close this site before connecting to the internet again.
+		</p>
+		<p class="justify">
+			Source code of this site is available on <a href="https://github.com/stepansnigirev/seed-modifier">GitHub</a>. It doesn't rely on any frameworks or libraries and doesn't require internet connection. Feel free to download source code and use it on air-gapped offline computer.
 		</p>
 
 		<h2>Your seed:</h2>
 		<input type="text" class="form-control" id="seed" value="kill venture inmate circle ski prevent burst zoo upon rather angle butter">
 		<p class="note" id="seed-note">&nbsp;</p>
 
-		<h2>Seed in hex format:</h2>
-		<p class="note">
-			In electrum seed contains both a checksum and wallet type. Seed should start with 01 for standart wallets, 100 for segwit, 101 for 2FA.
-		</p>
-		<div id="hmac" class="wrap">&nbsp;
-		</div>
-
-		<br><br>
 		<p>
 			<input type="button" id="generate" class="btn" value="Generate">
 		</p>

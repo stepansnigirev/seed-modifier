@@ -257,7 +257,6 @@ document.addEventListener("DOMContentLoaded", (e) => {
 		seedInput.className = "is-invalid";
 
 		getHash(seedInput.value.trim()).then( o => { 
-			document.getElementById("hmac").innerHTML = o.hash;
 			formats.forEach( format => {
 				if("verifyHash" in format){
 					let isValid = format.verifyHash(o.hash);
@@ -288,6 +287,6 @@ document.addEventListener("DOMContentLoaded", (e) => {
 		}, err => {
 			document.getElementById("bip39").innerHTML = "<span class='error'>Error: " + err + "</span>";
 		});
-		tryWord(seedInput.value, formats.filter( f => { return ("verifyHash" in f); }));
+		tryWord(seedInput.value, formats);
 	});
 });
